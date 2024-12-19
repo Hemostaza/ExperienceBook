@@ -1,0 +1,11 @@
+Expbook:
+  name: "{*} experience"
+  lore:
+    - "Book with {*}"
+    - "experience points"
+    - "written upon its pages"
+  neededLines:
+    - "SAVE EXPERIENCE {*}"
+    - "EXPERIENCE {*}"
+    - "SAVE {*} EXPERIENCE"
+    - "Save {*} EXP"
