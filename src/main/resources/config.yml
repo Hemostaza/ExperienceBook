@@ -1,4 +1,4 @@
-Expbook:
+expbook:
   name: "{*} experience"
   lore:
     - "Book with {*}"
@@ -8,4 +8,6 @@ Expbook:
     - "SAVE EXPERIENCE {*}"
     - "EXPERIENCE {*}"
     - "SAVE {*} EXPERIENCE"
-    - "Save {*} EXP"
+    - "SAVE {*} EXP"
+    - "ZAPISZ {*} DOŚWIADCZENIA"
+    - "ZAPISZ DOŚWIADCZENIE {*}"

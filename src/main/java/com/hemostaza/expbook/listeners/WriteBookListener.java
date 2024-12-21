@@ -48,7 +48,7 @@ public class WriteBookListener implements Listener {
                 replaceAll("[0-9]+", "{*}").
                 trim().
                 toUpperCase();
-        List<String> validLines = config.getStringList("Expbook.neededLines");
+        List<String> validLines = config.getStringList("expbook.neededLines");
 //        l.info(trim);
 //        l.info(validLines.toString());
         if(!validLines.contains(trim)){
@@ -103,12 +103,12 @@ public class WriteBookListener implements Listener {
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
-        String name = config.getString("Expbook.name");
+        String name = config.getString("expbook.name");
         if(name==null) name = "Book with experience";
         meta.setDisplayName(name.replace("{*}",String.valueOf(experience)));
 
         List<String> lore = new ArrayList<>();
-        List<String> configList = config.getStringList("Expbook.lore");
+        List<String> configList = config.getStringList("expbook.lore");
         l.info(configList.toString());
         for (String line : configList){
             lore.add(line.replace("{*}",String.valueOf(experience)));
