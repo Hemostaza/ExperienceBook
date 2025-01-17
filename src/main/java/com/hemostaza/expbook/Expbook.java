@@ -2,11 +2,13 @@ package com.hemostaza.expbook;
 
 import com.hemostaza.expbook.listeners.UseExperienceBook;
 import com.hemostaza.expbook.listeners.WriteBookListener;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Expbook extends JavaPlugin {
+
+    private final NamespacedKey key = new NamespacedKey(this,"expValue");
 
     @Override
     public void onEnable() {
@@ -29,5 +31,9 @@ public final class Expbook extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    public NamespacedKey getKey(){
+        return key;
     }
 }

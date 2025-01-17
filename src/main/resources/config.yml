@@ -1,3 +1,6 @@
+#name and lore is self explanatory.
+# {*} is experience saved in book.
+# neededLines are lines that are used to save experience in book. each line must have {*}
 expbook:
   name: "{*} experience"
   lore:

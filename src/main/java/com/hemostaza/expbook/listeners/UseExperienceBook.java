@@ -1,20 +1,21 @@
 package com.hemostaza.expbook.listeners;
 
 import com.hemostaza.expbook.Expbook;
-import com.hemostaza.expbook.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,8 +24,10 @@ import java.util.logging.Logger;
 public class UseExperienceBook implements Listener {
 
     FileConfiguration config;
+    Expbook plugin;
     Logger l;
     public UseExperienceBook(Expbook plugin){
+        this.plugin = plugin;
         config = plugin.getConfig();
         l = Bukkit.getLogger();
     }
@@ -41,10 +44,9 @@ public class UseExperienceBook implements Listener {
         int experience = getExperienceFromBook(itemInHand);
 
         if(experience==0){
-            //l.info("It's not exp book");
+            //player.sendMessage("Something went wrong");
             return;
         }
-        //l.info("Exp given "+experience);
         ExperienceOrb expOrb = (ExperienceOrb)player.getWorld().spawnEntity(player.getLocation(), EntityType.EXPERIENCE_ORB);
         expOrb.setExperience(experience);
 
@@ -57,13 +59,11 @@ public class UseExperienceBook implements Listener {
         List<String> lore = meta.getLore();
         if(lore == null) return 0;
         int experience = 0;
-        for (String line : meta.getLore()){
-            try{
-                experience = Integer.parseInt(line.replaceAll("[^0-9]", ""));
-                break;
-            }catch (NumberFormatException e){
-                //l.info("Something went wrong");
-            }
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if(container.has(plugin.getKey(), PersistentDataType.INTEGER)){
+            experience = container.get(plugin.getKey(), PersistentDataType.INTEGER);
+        }else{
+            l.info("Something went wrong");
         }
         return experience;
     }

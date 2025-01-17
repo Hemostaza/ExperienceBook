@@ -4,6 +4,7 @@ import com.hemostaza.expbook.Expbook;
 import com.hemostaza.expbook.ExperienceUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +34,13 @@ public class WriteBookListener implements Listener {
     @EventHandler
     public void onSignBook(PlayerEditBookEvent event){
         Player player = event.getPlayer();
-        //l.info("Book is edited");
         if(!event.isSigning()){
-            //l.info("is not signing book");
             return;
         }
         BookMeta bookMeta = event.getNewBookMeta();
         String page = bookMeta.getPage(1);
         String lineInBook = page.split(System.lineSeparator())[0];
         if(lineInBook.isEmpty()) {
-            //l.info("Neded line is empty: "+neededLine);
             return;
         }
         String trim = lineInBook.
@@ -49,10 +48,7 @@ public class WriteBookListener implements Listener {
                 trim().
                 toUpperCase();
         List<String> validLines = config.getStringList("expbook.neededLines");
-//        l.info(trim);
-//        l.info(validLines.toString());
         if(!validLines.contains(trim)){
-            //l.info("Wrong line: "+trim);
             return;
         }
         event.setCancelled(true);
@@ -62,41 +58,23 @@ public class WriteBookListener implements Listener {
             experience = Integer.parseInt(lineInBook.replaceAll("[^0-9]", ""));
         }catch (NumberFormatException e){
             player.sendMessage("Wrong experience value in your book.");
-//            l.info("Wrong experience value!");
             return;
         }
         if(experience==0){
-//            l.info("Experience is 0");
+            player.sendMessage("Experience value is 0.");
             return;
         }
-        if(!canSignBook(experience,player)) return;
-
-
-        l.info("Kniga z expę");
+        if(ExperienceUtils.getExp(player)<experience){
+            player.sendMessage("Not enough experience");
+            return;
+        }
 
         ItemStack expBook = createExperienceBook(experience);
-        l.info("add: "+expBook);
-        l.info(player.getInventory()+"");
-        player.getInventory().addItem(expBook);
 
-        ItemStack book = player.getInventory().getItemInMainHand();
-        book.setAmount(1);
-        l.info("remove: "+book);
-        player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
-        l.info(player.getInventory().getItemInMainHand()+"");
         Bukkit.getScheduler().runTask(plugin, ()->{
-            player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+            player.getInventory().setItemInMainHand(expBook);
+            ExperienceUtils.changeExp(player,-experience);
         });
-    }
-
-    public boolean canSignBook(int exp, Player player){
-        if(ExperienceUtils.getExp(player)<exp){
-            //player.sendMessage(config.getString("messages.not_enough_exp"));
-            player.sendMessage("Not enough experience");
-            return false;
-        }
-        ExperienceUtils.changeExp(player,-exp);
-        return true;
     }
     public ItemStack createExperienceBook(int experience) {
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK, 1);
@@ -105,7 +83,12 @@ public class WriteBookListener implements Listener {
 
         String name = config.getString("expbook.name");
         if(name==null) name = "Book with experience";
+
         meta.setDisplayName(name.replace("{*}",String.valueOf(experience)));
+
+        NamespacedKey key = plugin.getKey();
+
+        meta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER,experience);
 
         List<String> lore = new ArrayList<>();
         List<String> configList = config.getStringList("expbook.lore");
