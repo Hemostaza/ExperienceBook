@@ -40,6 +40,10 @@ public class UseExperienceBook implements Listener {
         }
 
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        //sprawdzenei czy to w ogole ksiazka zapisana
+        if(!itemInHand.getType().equals(Material.WRITTEN_BOOK)){
+            return;
+        }
 
         int experience = getExperienceFromBook(itemInHand);
 
