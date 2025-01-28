@@ -1,6 +1,8 @@
-#name and lore is self explanatory.
-# {*} is experience saved in book.
-# neededLines are lines that are used to save experience in book. each line must have {*}
+# Name and lore is self-explanatory.
+# {*} in name and lore is experience saved in book.
+# It's not necessary, but you probably want to show how much experience is saved.
+# NeededLines are lines that are used to save experience in book.
+# Each line must have {*} and be in all uppercase, but in game you don't have to write them in uppercase.
 expbook:
   name: "{*} experience"
   lore:
@@ -12,5 +14,5 @@ expbook:
     - "EXPERIENCE {*}"
     - "SAVE {*} EXPERIENCE"
     - "SAVE {*} EXP"
-    - "ZAPISZ {*} DOŚWIADCZENIA"
-    - "ZAPISZ DOŚWIADCZENIE {*}"
+#    - "ZAPISZ {*} DOŚWIADCZENIA"
+#    - "ZAPISZ DOŚWIADCZENIE {*}"
