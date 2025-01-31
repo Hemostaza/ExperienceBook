@@ -13,6 +13,8 @@ public final class Expbook extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        new UpdateChecker(this,122221);
+
         this.saveDefaultConfig();
 
         getServer().getPluginManager().registerEvents(new WriteBookListener(this), this);

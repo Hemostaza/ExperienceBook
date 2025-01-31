@@ -1,5 +1,5 @@
 name: ExpBook
-version: '1.0'
+version: '${project.version}'
 main: com.hemostaza.expbook.Expbook
 api-version: '1.21'
 commands:
