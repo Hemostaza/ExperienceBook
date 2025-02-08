@@ -6,7 +6,7 @@
 
     <groupId>com.hemostaza</groupId>
     <artifactId>experience-book</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>experience-book</name>
@@ -59,6 +59,14 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>maven-central</id>
+            <url>https://oss.sonatype.org/content/groups/public</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -67,6 +75,16 @@
             <artifactId>spigot-api</artifactId>
             <version>1.21.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Hemostaza</groupId>
+            <artifactId>UpdateChecker</artifactId>
+            <version>updatechecker-1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tchristofferson</groupId>
+            <artifactId>ConfigUpdater</artifactId>
+            <version>2.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

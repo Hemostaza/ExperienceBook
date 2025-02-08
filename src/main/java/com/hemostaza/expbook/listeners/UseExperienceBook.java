@@ -3,7 +3,6 @@ package com.hemostaza.expbook.listeners;
 import com.hemostaza.expbook.Expbook;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;

@@ -1,18 +1,19 @@
 # Name and lore are self-explanatory.
 #   {*} in the name and lore represents the experience saved in the book.
 #   It's not necessary, but you may want to display how much experience is saved.
-# NeededLines are the lines used to save experience in the book.
-#   Each line must include {*} and be in all uppercase; however, in the game, you don't have to write them in uppercase.
 expbook:
   name: "{*} experience"
   lore:
     - "Book with {*}"
     - "experience points"
     - "written upon its pages"
+# NeededLines are the lines used to save experience in the book.
+#   Each line must include {*} and be in all uppercase; however, in the game, you don't have to write them in uppercase.
   neededLines:
     - "SAVE EXPERIENCE {*}"
     - "EXPERIENCE {*}"
     - "SAVE {*} EXPERIENCE"
     - "SAVE {*} EXP"
-#    - "ZAPISZ {*} DOŚWIADCZENIA"
-#    - "ZAPISZ DOŚWIADCZENIE {*}"
+
+# This is percentage of the experience that be lost when saving in experience book
+takepercentage: 0

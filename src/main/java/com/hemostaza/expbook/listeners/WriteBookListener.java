@@ -25,22 +25,23 @@ public class WriteBookListener implements Listener {
     Expbook plugin;
     FileConfiguration config;
     Logger l;
-    public WriteBookListener(Expbook plugin){
+
+    public WriteBookListener(Expbook plugin) {
         this.plugin = plugin;
         config = plugin.getConfig();
         l = Bukkit.getLogger();
     }
 
     @EventHandler
-    public void onSignBook(PlayerEditBookEvent event){
+    public void onSignBook(PlayerEditBookEvent event) {
         Player player = event.getPlayer();
-        if(!event.isSigning()){
+        if (!event.isSigning()) {
             return;
         }
         BookMeta bookMeta = event.getNewBookMeta();
         String page = bookMeta.getPage(1);
         String lineInBook = page.split(System.lineSeparator())[0];
-        if(lineInBook.isEmpty()) {
+        if (lineInBook.isEmpty()) {
             return;
         }
         String trim = lineInBook.
@@ -48,7 +49,7 @@ public class WriteBookListener implements Listener {
                 trim().
                 toUpperCase();
         List<String> validLines = config.getStringList("expbook.neededLines");
-        if(!validLines.contains(trim)){
+        if (!validLines.contains(trim)) {
             return;
         }
         event.setCancelled(true);
@@ -56,50 +57,69 @@ public class WriteBookListener implements Listener {
         int experience;
         try {
             experience = Integer.parseInt(lineInBook.replaceAll("[^0-9]", ""));
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             player.sendMessage("Wrong experience value in your book.");
             return;
         }
-        if(experience==0){
+        if (experience == 0) {
             player.sendMessage("Experience value is 0.");
             return;
         }
-        if(ExperienceUtils.getExp(player)<experience){
+        if (ExperienceUtils.getExp(player) < experience) {
             player.sendMessage("Not enough experience");
             return;
         }
 
-        ItemStack expBook = createExperienceBook(experience);
+        ItemStack expBook = createExperienceBook(calculateExperience(experience));
 
-        Bukkit.getScheduler().runTask(plugin, ()->{
+        Bukkit.getScheduler().runTask(plugin, () -> {
             player.getInventory().setItemInMainHand(expBook);
-            ExperienceUtils.changeExp(player,-experience);
+            ExperienceUtils.changeExp(player, -experience);
         });
     }
+
     public ItemStack createExperienceBook(int experience) {
         ItemStack item = new ItemStack(Material.ENCHANTED_BOOK, 1);
         ItemMeta meta = item.getItemMeta();
         assert meta != null;
 
         String name = config.getString("expbook.name");
-        if(name==null) name = "Book with experience";
+        if (name == null) name = "Book with experience";
 
-        meta.setDisplayName(name.replace("{*}",String.valueOf(experience)));
+        meta.setDisplayName(name.replace("{*}", String.valueOf(experience)));
 
         NamespacedKey key = plugin.getKey();
 
-        meta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER,experience);
+        meta.getPersistentDataContainer().set(key, PersistentDataType.INTEGER, experience);
 
         List<String> lore = new ArrayList<>();
         List<String> configList = config.getStringList("expbook.lore");
-        l.info(configList.toString());
-        for (String line : configList){
-            lore.add(line.replace("{*}",String.valueOf(experience)));
+        //l.info(configList.toString());
+        for (String line : configList) {
+            lore.add(line.replace("{*}", String.valueOf(experience)));
         }
-        if(lore.isEmpty()) lore.add("Book with "+experience+" experience potins");
+        if (lore.isEmpty()) lore.add("Book with " + experience + " experience potins");
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         item.setItemMeta(meta);
         return item;
+    }
+
+    private int calculateExperience(int experience) {
+
+        int percentage = config.getInt("takepercentage");
+        if (percentage == 0) {
+            l.info("Percentage is set to 0");
+            return experience;
+        }
+        if (percentage > 0 && percentage <= 100) {
+            float fvalue = (float) percentage / 100 * experience;
+            experience -= (int)fvalue;
+            l.info("calcaulated experience: " + experience);
+            if (experience <= 0) experience = 0;
+        } else {
+            l.info("The percentage has wrong value, so it won't be used");
+        }
+        return experience;
     }
 }
