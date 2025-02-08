@@ -70,7 +70,21 @@ public class WriteBookListener implements Listener {
             return;
         }
 
-        ItemStack expBook = createExperienceBook(calculateExperience(experience));
+        int percentage = config.getInt("takepercentage");
+        int calculatedExp = experience;
+        if (percentage > 0 && percentage <= 100) {
+            float fvalue = (float) percentage / 100 * experience;
+            calculatedExp -= (int) fvalue;
+            //l.info("calcaulated experience: " + calculatedExp);
+            if (calculatedExp <= 0) calculatedExp = 0;
+            player.sendMessage("You lost " + percentage + "% of experience when saving it.");
+        } else if (percentage == 0) {
+            //l.info("Percentage is set to 0");
+        } else {
+            l.info("The percentage has wrong value, so it won't be used");
+        }
+
+        ItemStack expBook = createExperienceBook(calculatedExp);
 
         Bukkit.getScheduler().runTask(plugin, () -> {
             player.getInventory().setItemInMainHand(expBook);
@@ -114,7 +128,7 @@ public class WriteBookListener implements Listener {
         }
         if (percentage > 0 && percentage <= 100) {
             float fvalue = (float) percentage / 100 * experience;
-            experience -= (int)fvalue;
+            experience -= (int) fvalue;
             l.info("calcaulated experience: " + experience);
             if (experience <= 0) experience = 0;
         } else {
